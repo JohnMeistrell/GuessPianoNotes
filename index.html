@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta name="Ear For Music - Play random piano notes and guess" content="John Meistrell NJ">
+</head>
+
+<body>
+<h1>Ear For Music</h1>
+<h3>Play random piano notes and guess</h3>
+
+<button onclick="startPlay()">Play</button>
+<label id="idPlayName" for="html">Answer shown in a minute</label><br>
+<br>
+<audio id="idPlay" controls source src="https://raw.githubusercontent.com/fuhton/piano-mp3/master/piano-mp3/F1.mp3"></audio>
+
+    <div style="background-color:#feeb10; padding:5px;">
+        <div class="text-center">                                                                    Website designed by 
+        <a target="_blank" href="mailto:J.MeistrellMA@gmail.com"                                     >John Meistrell NJ (v1.5)</a>
+       </div>
+    </div>
+
+
+
+<script type="text/javascript">
+
+var saveR = [];  var gitFileList = []; var playList = [];
+
+getItem();
+
+async function getItem() {
+
+  /*  GitHub API (start) -----------------------------------------------------------------*/                      
+
+     var locationImage = "https://api.github.com/repos/fuhton/piano-mp3/contents/piano-mp3/";
+     const api_url    = locationImage ;
+
+     const response = await fetch(api_url);
+     let objvalue = await response.json();
+     console.log(objvalue);
+     saveR = objvalue;
+     console.log("done");
+
+     saveR.forEach( s => {
+        var sName = s.name;   
+        var sURL  = s.download_url;  
+        /* console.log(sName + " " + sURL); */
+        gitFileList.push(sName + " jm-jm " + sURL );
+     });
+
+     var lastItemSelectionBuilt = '';
+     gitFileList.sort();                                       /* SORT */
+     gitFileList.forEach(value => {                            /* EACH */
+        var sName = value;
+     } ); /* saveR.forEach (end) */
+
+    for (let i = 1; i <= 5; i++) {
+      let ii = Math.floor(Math.random() * gitFileList.length);
+      let r = gitFileList[ii];
+      console.log(r);
+      playList.push(r);
+    }
+    console.log(playList);
+
+  } ; /* GitHub API (end) -----------------------------------------------------------------*/
+
+</script>
+
+<script type="text/javascript">
+
+function showName(arg2) {
+     const lable1 = document.getElementById("idPlayName");
+     lable1.innerHTML = arg2;
+}
+
+function playThis(arg1) {
+
+     const lable1 = document.getElementById("idPlayName");
+     lable1.innerHTML = "Answer shown in a minute";
+
+     const aaa = arg1.split(" jm-jm "); 
+     const thisNoteX = aaa[0];        
+     const thisURL   = aaa[1];  
+
+     const bbb = thisNoteX.split(".mp3");
+     const thisNote = bbb[0];        
+
+     console.log("PLAY NOW: " + arg1 + " URL: " + thisURL);
+     const audio = document.getElementById("idPlay");
+     audio.src = thisURL;
+     audio.load();
+     audio.play();
+
+     setTimeout(showName, 6000, thisNote); // (after 6 seconds)
+
+}
+
+function startPlay() {
+     var nTime = 0;
+     playList.forEach(value => { 
+        var sName1 = value;
+        console.log("Next: " + nTime + " " + sName1 );
+        setTimeout(playThis, nTime, sName1); // (after 7 seconds)
+        nTime += 7000;
+     })
+
+}
+
+</script>
+
+</body>
+</html>
+
