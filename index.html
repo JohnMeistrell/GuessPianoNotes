@@ -9,6 +9,21 @@
 <h1>Ear For Music</h1>
 <h3>Play random piano notes and guess</h3>
 
+  Octives:
+  <input type="checkbox" id="octive1" name="octive1" value="1" style="margin-left: 0;margin-right: 0;" >1</input>
+  <input type="checkbox" id="octive2" name="octive2" value="2" style="margin-left: 0;margin-right: 0;" >2</input>
+  <input type="checkbox" id="octive3" name="octive3" value="3" style="margin-left: 0;margin-right: 0;" >3</input>
+  <input type="checkbox" id="octive4" name="octive4" value="4" style="margin-left: 0;margin-right: 0;" >4</input>
+  <input type="checkbox" id="octive5" name="octive5" value="5" style="margin-left: 0;margin-right: 0;" >5</input>
+  <input type="checkbox" id="octive6" name="octive6" value="6" style="margin-left: 0;margin-right: 0;" >6</input>
+  <input type="checkbox" id="octive7" name="octive7" value="7" style="margin-left: 0;margin-right: 0;" >7</input>
+  <input type="checkbox" id="octive8" name="octive8" value="8" style="margin-left: 0;margin-right: 0;" >8</input>
+
+<br>
+
+<button onclick="buildPlay()">Build</button>
+
+
 <button onclick="startPlay()">Play</button>
 <label id="idPlayName" for="html">Answer shown in a minute</label><br>
 <br>
@@ -24,7 +39,7 @@
 
 <script type="text/javascript">
 
-var saveR = [];  var gitFileList = []; var playList = [];
+var saveR = [];  var gitFileList = []; var playList = []; var ttt = "";
 
 getItem();
 
@@ -44,12 +59,30 @@ async function getItem() {
      saveR.forEach( s => {
         var sName = s.name;   
         var sURL  = s.download_url;  
-        /* console.log(sName + " " + sURL); */
-        gitFileList.push(sName + " jm-jm " + sURL );
+
+        const aName         = sName.split(".mp3");
+        const noteName      = aName[0];
+       
+        var noteOctive     = noteName.slice(-1); 
+        var noteFlatSharp  = noteName.slice(1, 2);
+        var noteLetter     = noteName.slice(0, 1);
+
+        ttt = "n";
+        if ( noteFlatSharp == "b" ) { 
+             ttt = "b";
+        }
+        if ( noteFlatSharp == "s" ) { 
+             ttt = "s";
+        }
+
+        gitFileList.push(noteOctive + " " + noteLetter + " " +  ttt + " jm-jm " + sName + " jm-jm " + sURL );
      });
 
      var lastItemSelectionBuilt = '';
+
      gitFileList.sort();                                       /* SORT */
+     console.log(gitFileList);
+
      gitFileList.forEach(value => {                            /* EACH */
         var sName = value;
      } ); /* saveR.forEach (end) */
@@ -62,7 +95,10 @@ async function getItem() {
     }
     console.log(playList);
 
+
+
   } ; /* GitHub API (end) -----------------------------------------------------------------*/
+
 
 </script>
 
@@ -79,8 +115,9 @@ function playThis(arg1) {
      lable1.innerHTML = "Answer shown in a minute";
 
      const aaa = arg1.split(" jm-jm "); 
-     const thisNoteX = aaa[0];        
-     const thisURL   = aaa[1];  
+     const thisSort  = aaa[0]; 
+     const thisNoteX = aaa[1];        
+     const thisURL   = aaa[2];  
 
      const bbb = thisNoteX.split(".mp3");
      const thisNote = bbb[0];        
@@ -103,6 +140,29 @@ function startPlay() {
         setTimeout(playThis, nTime, sName1); // (after 7 seconds)
         nTime += 7000;
      })
+
+}
+
+function buildPlay() {
+
+    playList = [];
+
+    gitFileList.forEach(value => {    
+       const aaa5 = value.split(" "); 
+       const thisOctive  = aaa5[0]; 
+       const thisNote    = aaa5[1];        
+       const thisType    = aaa5[2];  
+       if (   thisOctive == '1' && ( document.getElementById("octive1").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '2' && ( document.getElementById("octive2").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '3' && ( document.getElementById("octive3").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '4' && ( document.getElementById("octive4").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '5' && ( document.getElementById("octive5").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '6' && ( document.getElementById("octive6").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '7' && ( document.getElementById("octive7").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '8' && ( document.getElementById("octive8").checked )   ) {  playList.push(value); } 
+
+    })
+    console.log(playList);    
 
 }
 
