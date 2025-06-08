@@ -9,6 +9,11 @@
 <h1>Ear For Music</h1>
 <h3>Play random piano notes and guess</h3>
 
+  Accidentals: Sharps Flats: 
+  <input type="checkbox" id="sharps1" name="sharps1" value="s" style="margin-left: 0;margin-right: 0;" >#</input>
+  <input type="checkbox" id="flats1"  name="flats1"  value="b" style="margin-left: 0;margin-right: 0;" >b</input>
+  <br>
+
   Octives:
   <input type="checkbox" id="octive1" name="octive1" value="1" style="margin-left: 0;margin-right: 0;" >1</input>
   <input type="checkbox" id="octive2" name="octive2" value="2" style="margin-left: 0;margin-right: 0;" >2</input>
@@ -18,34 +23,81 @@
   <input type="checkbox" id="octive6" name="octive6" value="6" style="margin-left: 0;margin-right: 0;" >6</input>
   <input type="checkbox" id="octive7" name="octive7" value="7" style="margin-left: 0;margin-right: 0;" >7</input>
   <input type="checkbox" id="octive8" name="octive8" value="8" style="margin-left: 0;margin-right: 0;" >8</input>
+  <br><br>
 
-<br>
+  <button onclick="buildPlay()">Build</button>
+  <button onclick="startPlay()">Play</button>
+  <br>
+  <label id="idPlayName" for="html" style="font-size: x-large"></label><br>
+  <br>
 
-<button onclick="buildPlay()">Build</button>
+  <audio id="idPlay" controls source " src="https://raw.githubusercontent.com/fuhton/piano-mp3/master/piano-mp3/F1.mp3"></audio>
+
+  <br><br>API Sorted:<select id="myDropdown1">API</select>
+  <br><br>Play List:<select id="myDropdown3">Play List</select>
+  <br><br>NEW List:<select id="myDropdown2"></select>
+  <br><br>Random:<select id="myDropdown4"></select>
 
 
-<button onclick="startPlay()">Play</button>
-<label id="idPlayName" for="html">Answer shown in a minute</label><br>
-<br>
-<audio id="idPlay" controls source src="https://raw.githubusercontent.com/fuhton/piano-mp3/master/piano-mp3/F1.mp3"></audio>
-
-    <div style="background-color:#feeb10; padding:5px;">
-        <div class="text-center">                                                                    Website designed by 
-        <a target="_blank" href="mailto:J.MeistrellMA@gmail.com"                                     >John Meistrell NJ (v1.5)</a>
-       </div>
-    </div>
-
+  <div style="background-color:#feeb10; padding:5px;">
+      <div class="text-center">                                                                    Website designed by 
+      <a target="_blank" href="mailto:J.MeistrellMA@gmail.com"                                     >John Meistrell NJ (v1.5)</a>
+     </div>
+  </div>
 
 
 <script type="text/javascript">
 
-var saveR = [];  var gitFileList = []; var playList = []; var ttt = "";
+/*       --------------      ------------------------------------------------------------------------------------------ */
+function showArrays() {
+/*       --------------      ------------------------------------------------------------------------------------------ */
 
-getItem();
+   const dropdown1 = document.getElementById('myDropdown1');
+   gitFileList.forEach(value => {
+     const option = document.createElement('option');
+     option.value = value;
+     option.text = value;
+     dropdown1.appendChild(option);
+   });
 
-async function getItem() {
+   const dropdown2 = document.getElementById('myDropdown2');
+   newList.forEach(value => {
+     const option = document.createElement('option');
+     option.value = value;
+     option.text = value;
+     dropdown2.appendChild(option);
+   });
 
-  /*  GitHub API (start) -----------------------------------------------------------------*/                      
+   const dropdown3 = document.getElementById('myDropdown3');
+   playList.forEach(value => {
+     const option = document.createElement('option');
+     option.value = value;
+     option.text = value;
+     dropdown3.appendChild(option);
+   })
+
+   const dropdown4 = document.getElementById('myDropdown4');
+   newListRandom.forEach(value => {
+     const option = document.createElement('option');
+     option.value = value;
+     option.text = value;
+     dropdown4.appendChild(option);
+   })
+
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------- */
+
+
+var saveR = [];  var gitFileList = []; var playList = []; var ttt = ""; var newList = []; var newListRandom = [];
+
+
+getItemsFromGIT();
+
+
+/*             --------------      ------------------------------------------------------------------------------------------ */
+async function getItemsFromGIT() {
+/*             --------------      ------------------------------------------------------------------------------------------ */
 
      var locationImage = "https://api.github.com/repos/fuhton/piano-mp3/contents/piano-mp3/";
      const api_url    = locationImage ;
@@ -81,7 +133,6 @@ async function getItem() {
      var lastItemSelectionBuilt = '';
 
      gitFileList.sort();                                       /* SORT */
-     console.log(gitFileList);
 
      gitFileList.forEach(value => {                            /* EACH */
         var sName = value;
@@ -93,26 +144,48 @@ async function getItem() {
       console.log(r);
       playList.push(r);
     }
-    console.log(playList);
+    console.log("playList:"); playList.forEach(elementC => { console.log(elementC); });
 
+    showArrays();
 
-
-  } ; /* GitHub API (end) -----------------------------------------------------------------*/
+  } ; /* GitHub API (end) */
 
 
 </script>
 
 <script type="text/javascript">
 
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function showName(arg2) {
+/*       --------------      ------------------------------------------------------------------------------------------ */
+
+     console.log("EEEEE " + arg2 );
+
+     var sayNote = arg2.charAt(0);
+     var sayType = "";
+     var sayType1 = arg2.charAt(1);
+     if (sayType1 == 'b') { sayType = "Flat"; }
+
+     const sayThisNow = sayNote + ". " + sayType;
+
      const lable1 = document.getElementById("idPlayName");
-     lable1.innerHTML = arg2;
+     lable1.innerHTML = sayNote + " " + sayType;
+
+     if ('speechSynthesis' in window) {
+        var msg = new SpeechSynthesisUtterance();
+        msg.text = sayThisNow; window.speechSynthesis.speak(msg);
+     }
+
 }
 
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function playThis(arg1) {
+/*       --------------      ------------------------------------------------------------------------------------------ */
+
+     console.log("playThis: "  + arg1 );
 
      const lable1 = document.getElementById("idPlayName");
-     lable1.innerHTML = "Answer shown in a minute";
+     lable1.innerHTML = "";
 
      const aaa = arg1.split(" jm-jm "); 
      const thisSort  = aaa[0]; 
@@ -120,51 +193,88 @@ function playThis(arg1) {
      const thisURL   = aaa[2];  
 
      const bbb = thisNoteX.split(".mp3");
-     const thisNote = bbb[0];        
+     const thisNote = bbb[0];      
 
-     console.log("PLAY NOW: " + arg1 + " URL: " + thisURL);
+     const ccc = thisSort.split(" ");
+     var sayNote = ccc[1];
+     var sayType = "";
+     var sayType1 = ccc[2];
+     if (sayType1 == 'b') { sayType = "Flat"; }  
+
      const audio = document.getElementById("idPlay");
      audio.src = thisURL;
      audio.load();
      audio.play();
 
-     setTimeout(showName, 6000, thisNote); // (after 6 seconds)
+     setTimeout(showName, 7000, thisNote + sayType1 + " " + sayType); // (after 6 seconds)
 
 }
 
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function startPlay() {
+/*       --------------      ------------------------------------------------------------------------------------------ */
+
+     if ( newListRandom.length > 0 ) { playList = newListRandom; }  
+
+     showArrays();
+
      var nTime = 0;
      playList.forEach(value => { 
         var sName1 = value;
         console.log("Next: " + nTime + " " + sName1 );
         setTimeout(playThis, nTime, sName1); // (after 7 seconds)
-        nTime += 7000;
+        nTime += 11000;
      })
 
 }
 
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function buildPlay() {
+/*       --------------      ------------------------------------------------------------------------------------------ */
 
-    playList = [];
 
-    gitFileList.forEach(value => {    
+    var addNote = false;
+
+    gitFileList.forEach(value => {   
+
+       var addNote = false;
        const aaa5 = value.split(" "); 
        const thisOctive  = aaa5[0]; 
        const thisNote    = aaa5[1];        
        const thisType    = aaa5[2];  
-       if (   thisOctive == '1' && ( document.getElementById("octive1").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '2' && ( document.getElementById("octive2").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '3' && ( document.getElementById("octive3").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '4' && ( document.getElementById("octive4").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '5' && ( document.getElementById("octive5").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '6' && ( document.getElementById("octive6").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '7' && ( document.getElementById("octive7").checked )   ) {  playList.push(value); } 
-       if (   thisOctive == '8' && ( document.getElementById("octive8").checked )   ) {  playList.push(value); } 
+       if (   thisOctive == '1' && ( document.getElementById("octive1").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '2' && ( document.getElementById("octive2").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '3' && ( document.getElementById("octive3").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '4' && ( document.getElementById("octive4").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '5' && ( document.getElementById("octive5").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '6' && ( document.getElementById("octive6").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '7' && ( document.getElementById("octive7").checked )   ) {  addNote = true; } 
+       if (   thisOctive == '8' && ( document.getElementById("octive8").checked )   ) {  addNote = true; } 
+
+       if ( addNote )  {  
+          if ( thisType  == 'n'                                                    ) { newList.push(value); } 
+          if ( thisType  == 'b' && ( document.getElementById("flats1").checked )   ) { newList.push(value); } 
+       }
 
     })
-    console.log(playList);    
+    console.log("playList:"); console.log(playList); 
+    console.log("newList:"); console.log(newList); 
+
+
+
+    for (let i = 1; i <= 5; i++) {
+      let ii = Math.floor(Math.random() * newList.length);
+      let r = newList[ii];
+      console.log(r);
+      newListRandom.push(r);
+    }
+
+    playList = newListRandom;   
+
+    showArrays();
 
 }
+
 
 </script>
 
