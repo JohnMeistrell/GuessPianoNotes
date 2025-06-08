@@ -10,33 +10,37 @@
 <h3>Play random piano notes and guess</h3>
 
   Accidentals: Sharps Flats: 
-  <input type="checkbox" id="sharps1" name="sharps1" value="s" style="margin-left: 0;margin-right: 0;" >#</input>
-  <input type="checkbox" id="flats1"  name="flats1"  value="b" style="margin-left: 0;margin-right: 0;" >b</input>
+  <input type="checkbox" id="sharps1" name="sharps1" value="s" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">#</input>
+  <input type="checkbox" id="flats1"  name="flats1"  value="b" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">b</input>
   <br>
 
   Octives:
-  <input type="checkbox" id="octive1" name="octive1" value="1" style="margin-left: 0;margin-right: 0;" >1</input>
-  <input type="checkbox" id="octive2" name="octive2" value="2" style="margin-left: 0;margin-right: 0;" >2</input>
-  <input type="checkbox" id="octive3" name="octive3" value="3" style="margin-left: 0;margin-right: 0;" >3</input>
-  <input type="checkbox" id="octive4" name="octive4" value="4" style="margin-left: 0;margin-right: 0;" >4</input>
-  <input type="checkbox" id="octive5" name="octive5" value="5" style="margin-left: 0;margin-right: 0;" >5</input>
-  <input type="checkbox" id="octive6" name="octive6" value="6" style="margin-left: 0;margin-right: 0;" >6</input>
-  <input type="checkbox" id="octive7" name="octive7" value="7" style="margin-left: 0;margin-right: 0;" >7</input>
-  <input type="checkbox" id="octive8" name="octive8" value="8" style="margin-left: 0;margin-right: 0;" >8</input>
+  <input type="checkbox" id="octive1" name="octive1" value="1" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">1</input>
+  <input type="checkbox" id="octive2" name="octive2" value="2" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">2</input>
+  <input type="checkbox" id="octive3" name="octive3" value="3" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">3</input>
+  <input type="checkbox" id="octive4" name="octive4" value="4" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">4</input>
+  <input type="checkbox" id="octive5" name="octive5" value="5" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">5</input>
+  <input type="checkbox" id="octive6" name="octive6" value="6" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">6</input>
+  <input type="checkbox" id="octive7" name="octive7" value="7" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">7</input>
+  <input type="checkbox" id="octive8" name="octive8" value="8" style="margin-left: 0;margin-right: 0;" onclick="clearLists()">8</input>
   <br><br>
 
   <button onclick="buildPlay()">Build</button>
+  <button onclick="shuffle()"  >Shuffle</button>
   <button onclick="startPlay()">Play</button>
+  On:<label id="idOn" for="html"></label>
+  of:<label id="idOf" for="html"></label>
+
   <br>
   <label id="idPlayName" for="html" style="font-size: x-large"></label><br>
   <br>
 
   <audio id="idPlay" controls source " src="https://raw.githubusercontent.com/fuhton/piano-mp3/master/piano-mp3/F1.mp3"></audio>
 
-  <br><br>API Sorted:<select id="myDropdown1">API</select>
-  <br><br>Play List:<select id="myDropdown3">Play List</select>
-  <br><br>NEW List:<select id="myDropdown2"></select>
-  <br><br>Random:<select id="myDropdown4"></select>
+  <br><br>API Sorted:<select id="myDropdown1"></select>
+  <br><br>Play List: <select id="myDropdown3"></select>
+  <br><br>NEW List:  <select id="myDropdown2"></select>
+  <br><br>Random:    <select id="myDropdown4"></select>
 
 
   <div style="background-color:#feeb10; padding:5px;">
@@ -49,10 +53,23 @@
 <script type="text/javascript">
 
 /*       --------------      ------------------------------------------------------------------------------------------ */
+function clearLists() {
+/*       --------------      ------------------------------------------------------------------------------------------ */
+
+   playList = []; newList = []; newListRandom = [];
+
+   showArrays();
+
+   buildPlay();
+
+}
+
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function showArrays() {
 /*       --------------      ------------------------------------------------------------------------------------------ */
 
    const dropdown1 = document.getElementById('myDropdown1');
+   while (dropdown1.firstChild) { dropdown1.removeChild(dropdown1.firstChild);  }
    gitFileList.forEach(value => {
      const option = document.createElement('option');
      option.value = value;
@@ -61,6 +78,7 @@ function showArrays() {
    });
 
    const dropdown2 = document.getElementById('myDropdown2');
+   while (dropdown2.firstChild) { dropdown2.removeChild(dropdown2.firstChild);  }
    newList.forEach(value => {
      const option = document.createElement('option');
      option.value = value;
@@ -69,6 +87,7 @@ function showArrays() {
    });
 
    const dropdown3 = document.getElementById('myDropdown3');
+   while (dropdown3.firstChild) { dropdown3.removeChild(dropdown3.firstChild);  }
    playList.forEach(value => {
      const option = document.createElement('option');
      option.value = value;
@@ -77,6 +96,7 @@ function showArrays() {
    })
 
    const dropdown4 = document.getElementById('myDropdown4');
+   while (dropdown4.firstChild) { dropdown4.removeChild(dropdown4.firstChild);  }
    newListRandom.forEach(value => {
      const option = document.createElement('option');
      option.value = value;
@@ -191,6 +211,17 @@ function playThis(arg1) {
      const thisSort  = aaa[0]; 
      const thisNoteX = aaa[1];        
      const thisURL   = aaa[2];  
+     const thisOnOf  = aaa[3];
+
+     const ddd = thisOnOf.split(" ");
+     const thisOn  = ddd[0];
+     const thisOf  = ddd[1];
+
+
+     const lable5 = document.getElementById("idOn");
+     lable5.innerHTML = thisOn;
+     const lable6 = document.getElementById("idOf");
+     lable6.innerHTML = thisOf;
 
      const bbb = thisNoteX.split(".mp3");
      const thisNote = bbb[0];      
@@ -217,11 +248,11 @@ function startPlay() {
      if ( newListRandom.length > 0 ) { playList = newListRandom; }  
 
      showArrays();
-
-     var nTime = 0;
-     playList.forEach(value => { 
-        var sName1 = value;
-        console.log("Next: " + nTime + " " + sName1 );
+     var nTime = 0; var playTotal = playList.length;
+     playList.forEach((value, index) => { 
+        var sOn = index + 1;
+        var sName1 = value + " jm-jm " +  sOn + " " + playTotal ;
+        console.log("Next: " + nTime + " " + sName1 + " zzzz " + sOn + " " + playTotal  );
         setTimeout(playThis, nTime, sName1); // (after 7 seconds)
         nTime += 11000;
      })
@@ -229,9 +260,31 @@ function startPlay() {
 }
 
 /*       --------------      ------------------------------------------------------------------------------------------ */
+function shuffle() {
+/*       --------------      ------------------------------------------------------------------------------------------ */
+
+newListRandom = [];
+
+    for (let i = 1; i <= 5; i++) {
+      let ii = Math.floor(Math.random() * newList.length);
+      let r = newList[ii];
+      console.log(r);
+      newListRandom.push(r);
+    }
+
+    playList = newListRandom;  
+    console.log("buildPlay() - playList:"); console.log(playList); 
+
+    showArrays();
+
+
+}
+
+/*       --------------      ------------------------------------------------------------------------------------------ */
 function buildPlay() {
 /*       --------------      ------------------------------------------------------------------------------------------ */
 
+    playList = []; newList = []; newListRandom = [];
 
     var addNote = false;
 
@@ -257,10 +310,8 @@ function buildPlay() {
        }
 
     })
-    console.log("playList:"); console.log(playList); 
-    console.log("newList:"); console.log(newList); 
-
-
+    console.log("buildPlay() - gitFileList:"); console.log(gitFileList); 
+    console.log("buildPlay() - newList:"); console.log(newList); 
 
     for (let i = 1; i <= 5; i++) {
       let ii = Math.floor(Math.random() * newList.length);
@@ -268,8 +319,10 @@ function buildPlay() {
       console.log(r);
       newListRandom.push(r);
     }
+    console.log("buildPlay() - newListRandom:"); console.log(newListRandom); 
 
-    playList = newListRandom;   
+    playList = newListRandom;  
+    console.log("buildPlay() - playList:"); console.log(playList); 
 
     showArrays();
 
